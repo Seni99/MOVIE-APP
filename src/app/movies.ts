@@ -1,29 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs'; // <--- ESTO ES LO QUE TE FALTABA
 import { Movie } from '../movie.interface';
-import { TMDB_CONFIG } from './app.config'; // <-- Cambiado a app.config
 
-@Injectable({
-  providedIn: 'root'
-})
-export class MoviesService {
+@Injectable({ providedIn: 'root' })
+export class MovieService {
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:3000/movies';
 
-  // 1. Tu nueva función para traer las películas reales
-  async getPeliculasPopulares(): Promise<any> {
-    try {
-      const url = `${TMDB_CONFIG.baseUrl}/movie/popular?api_key=${TMDB_CONFIG.apiKey}&language=es-ES&page=1`;
-      
-      const respuesta = await fetch(url);
-      const datos = await respuesta.json();
-      
-      return datos.results; 
-    } catch (error) {
-      console.error('Error al traer películas de TMDB:', error);
-      return [];
-    }
+  getMovies(): Observable<Movie[]> {
+    return this.http.get<Movie[]>(this.apiUrl);
   }
 
-  // 2. Mantenemos esta función por si tus otros componentes la necesitan
-  async getMovies(): Promise<any> {
-    return await this.getPeliculasPopulares();
+  getMovieById(id: string): Observable<Movie> {
+    return this.http.get<Movie>(`${this.apiUrl}/${id}`);
   }
 }
