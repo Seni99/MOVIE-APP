@@ -19,10 +19,10 @@ export const routes: Routes = [
         path: 'movies', 
         loadComponent: () => import('./pages/movie-list/movie-list').then(m => m.MovieListComponent) 
       },
-      { 
-        path: 'movies/:movieId', 
-        loadComponent: () => import('./pages/movie-details/movie-details').then(m => m.MovieDetailsComponent) 
-      }
+      {
+  path: 'movies/:movieId',
+  loadComponent: () => import('./pages/movie-details/movie-details').then(m => m.MovieDetailsComponent)
+}
     ]
   },
   { 
