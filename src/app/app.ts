@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router'; // <-- Cambiamos esto aquí
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule], // <-- Y esto aquí para que cure el error del HTML
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  imports: [RouterOutlet],
+  template: `
+    <router-outlet></router-outlet>
+  `
 })
-export class AppComponent {
-  title = 'movie-app';
-}
+export class AppComponent { }

@@ -1,21 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Movie } from '../movie.interface';
+import { TMDB_CONFIG } from './app.config'; // <-- Cambiado a app.config
 
 @Injectable({
   providedIn: 'root'
 })
 export class MoviesService {
-  private movies: Movie[] = [
-    { id: '1', title: 'Inception', director: 'Christopher Nolan', genre: 'Ciencia Ficción' },
-    { id: '2', title: 'Pulp Fiction', director: 'Quentin Tarantino', genre: 'Crimen' },
-    { id: '3', title: 'The Matrix', director: 'Lana Wachowski', genre: 'Acción' }
-  ];
 
-  getMovies(): Movie[] {
-    return this.movies;
+  // 1. Tu nueva función para traer las películas reales
+  async getPeliculasPopulares(): Promise<any> {
+    try {
+      const url = `${TMDB_CONFIG.baseUrl}/movie/popular?api_key=${TMDB_CONFIG.apiKey}&language=es-ES&page=1`;
+      
+      const respuesta = await fetch(url);
+      const datos = await respuesta.json();
+      
+      return datos.results; 
+    } catch (error) {
+      console.error('Error al traer películas de TMDB:', error);
+      return [];
+    }
   }
 
-  getMovieById(id: string): Movie | undefined {
-    return this.movies.find(movie => movie.id === id);
+  // 2. Mantenemos esta función por si tus otros componentes la necesitan
+  async getMovies(): Promise<any> {
+    return await this.getPeliculasPopulares();
   }
 }
