@@ -10,5 +10,9 @@ export class MovieService {
   ];
 
   getMovies() { return this.movies; }
-  getMovieById(id: string) { return this.movies.find(m => m.id === id); }
+  getMovieById(id: string): any { // Pon ": any" temporalmente para eliminar el error
+  return this.movies.find(m => m.id === id);
+}
+
+
 }

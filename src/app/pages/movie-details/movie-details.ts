@@ -1,15 +1,13 @@
-import { Component, inject, input, computed } from '@angular/core'; // Añadimos computed
-import { MovieService } from '../../movies';
-import { toSignal, toObservable } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { Component, inject, input, computed } from '@angular/core'; 
+import { MovieService } from '../../services/movies'; // Asegúrate de que esta ruta sea la correcta a tu servicio
 
 @Component({
   selector: 'app-movie-details',
   standalone: true,
   template: `
     @if (movie()) {
-      <h1>{{ movie()?.title }}</h1>
-      <button (click)="onDelete()">Eliminar</button>
+      <h1>{{ movie()!.title }}</h1> <!-- Usamos ! porque con el @if sabemos que existe -->
+    
     } @else {
       <p>Cargando...</p>
     }
@@ -18,17 +16,8 @@ import { switchMap } from 'rxjs';
 export class MovieDetailsComponent {
   movieId = input.required<string>();
   private movieService = inject(MovieService);
-
-  // Convertimos el input en observable y luego en señal
-  private movie$ = toObservable(this.movieId).pipe(
-    switchMap(id => this.movieService.getMovieById(id))
-  );
   
-  movie = toSignal(this.movie$, { initialValue: null });
+  // Esta es la parte clave: ahora es una computed simple y limpia
+  movie = computed(() => this.movieService.getMovieById(this.movieId()));
 
-  onDelete() {
-    this.movieService.deleteMovie(this.movieId()).subscribe(() => {
-      alert('Película eliminada');
-    });
   }
-}
